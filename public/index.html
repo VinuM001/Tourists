@@ -34,59 +34,37 @@
       console.log('Socket.io loaded:', typeof io);
 
       try {
-        // Initialize the map once
-        const map = L.map('map').setView([51.505, -0.09], 13); // Set initial map center and zoom level
+        <script>
+      // Initialize the map
+      const map = L.map('map').setView([51.505, -0.09], 13);
 
-        // Add OpenStreetMap tile layer to the map (this is like the background of the map)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(map); // Add it to the map
+      // Add OpenStreetMap tile layer
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
 
-        // Establish a connection to the backend server using Socket.io
-        const socket = io();  // This creates the connection to the server via Socket.io
+      // Establish a connection to the server using Socket.io
+      const socket = io();  // This creates the connection to the server
 
-        // Handle tourist-location event
+      // Handle tourist-location event
       socket.on('tourist-location', (data) => {
         const { id, lat, lon } = data;
         const marker = L.marker([lat, lon]).addTo(map)
           .bindPopup(`Tourist ID: ${id}`)
           .openPopup();
       });
-      
-        // Store tourist markers by their unique ID
-        const touristMarkers = {};
 
-        // Listen for "tourist-location" event from the server to update tourist locations
-        socket.on('tourist-location', (data) => {
-          const { id, lat, lon } = data;
+      // Use Geolocation to get user's location
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(function (position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
 
-          // If the tourist already has a marker, update their position
-          if (touristMarkers[id]) {
-            touristMarkers[id].setLatLng([lat, lon]);
-          } else {
-            // Otherwise, create a new marker for the tourist
-            touristMarkers[id] = L.marker([lat, lon])
-              .addTo(map)  // Add the marker to the map
-              .bindPopup(`Tourist ID: ${id}`)  // Show tourist's ID when clicked
-              .openPopup();  // Open the popup by default
-          }
+          // Send the location data to the server
+          socket.emit('send-location', { lat, lon });
         });
-
-        // Use the browser's Geolocation API to get the tourist's location
-        if (navigator.geolocation) {
-          navigator.geolocation.watchPosition(function (position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-
-            // Send the tourist's location to the server
-            socket.emit('send-location', { lat, lon });
-          });
-        } else {
-          console.log('Geolocation is not supported by this browser.');
-        }
-
-      } catch (error) {
-        console.error("Error initializing map: ", error);
+      } else {
+        console.log("Geolocation is not supported by this browser.");
       }
     </script>
   </body>
