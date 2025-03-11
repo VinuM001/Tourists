@@ -45,6 +45,14 @@
         // Establish a connection to the backend server using Socket.io
         const socket = io();  // This creates the connection to the server via Socket.io
 
+        // Handle tourist-location event
+      socket.on('tourist-location', (data) => {
+        const { id, lat, lon } = data;
+        const marker = L.marker([lat, lon]).addTo(map)
+          .bindPopup(`Tourist ID: ${id}`)
+          .openPopup();
+      });
+      
         // Store tourist markers by their unique ID
         const touristMarkers = {};
 

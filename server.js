@@ -45,11 +45,18 @@ function isAuthenticated(req, res, next) {
 app.use(express.static('public'));
 
 // Handle new connections from clients (browsers)
-let touristId = 0;
-
 io.on('connection', (socket) => {
   console.log('A tourist connected');
-  touristId++;
+  
+  socket.on('send-location', (data) => {
+    console.log('Location data received:', data);
+    io.emit('tourist-location', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A tourist disconnected');
+  });
+});
 
   // Send the unique tourist ID to the client
   socket.emit('tourist-id', touristId);
