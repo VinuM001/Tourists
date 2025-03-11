@@ -7,14 +7,21 @@ const bcrypt = require('bcryptjs');
 // Create an Express application
 const app = express();
 const server = http.createServer(app); // Create HTTP server using Express
-const io = socketIo(server); // Initialize Socket.io with the server
+
+// Initialize Socket.io with CORS configuration
+const io = socketIo(server, {
+  cors: {
+    origin: "https://vigimap-7mvnmdjol-vinu-m001s-projects.vercel.app",  // The frontend URL
+    methods: ["GET", "POST"]
+  }
+});
 
 // Express session setup
 app.use(session({
-  secret: 'your-secret-key', // Change this to a secure key
+  secret: 'your-secret-key',  // Change this to a secure key
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production' } // Secure cookie for HTTPS (in production)
+  cookie: { secure: process.env.NODE_ENV === 'production' }  // Secure cookie in production
 }));
 
 // Middleware to parse incoming requests (form data)
@@ -23,7 +30,7 @@ app.use(express.urlencoded({ extended: true })); // Allows Express to parse form
 // Dummy admin credentials (for demonstration purposes)
 const adminUser = {
   username: 'admin',
-  password: '$2b$10$77eyrSIkGWs2L4HUCasZxeUzgzhijZXsTIWKDrHWMypA/NbaVdL9u' // bcrypt hash of 'password123'
+  password: '$2b$10$77eyrSIkGWs2L4HUCasZxeUzgzhijZXsTIWKDrHWMypA/NbaVdL9u'  // bcrypt hash of 'password123'
 };
 
 // Middleware to check if the user is logged in
@@ -107,7 +114,3 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-const socketIo = require('socket.io');
-const server = http.createServer(app); // Create HTTP server using Express
-const io = socketIo(server); // Initialize Socket.io with the server
