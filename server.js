@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 const app = express();
 const server = http.createServer(app); // Create HTTP server using Express
 
-// Initialize Socket.io with CORS configuration
+// Initialize Socket.io with CORS configuration to allow the frontend to connect
 const io = socketIo(server, {
   cors: {
     origin: "https://vigimap-7mvnmdjol-vinu-m001s-projects.vercel.app",  // The frontend URL
