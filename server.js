@@ -14,7 +14,7 @@ app.use(session({
   secret: 'your-secret-key', // Change this to a secure key
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to `true` if using HTTPS
+  cookie: { secure: process.env.NODE_ENV === 'production' } // Secure cookie for HTTPS (in production)
 }));
 
 // Middleware to parse incoming requests (form data)
