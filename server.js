@@ -25,7 +25,6 @@ const adminUser = {
   password: '$2b$10$77eyrSIkGWs2L4HUCasZxeUzgzhijZXsTIWKDrHWMypA/NbaVdL9u' // bcrypt hash of 'password123'
 };
 
-
 // Middleware to check if the user is logged in
 function isAuthenticated(req, res, next) {
   if (req.session.loggedIn) {
@@ -102,7 +101,8 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// Start the server on port 3000
-server.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+// Use the dynamically assigned port for Vercel or fallback to 3000 for local development
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
