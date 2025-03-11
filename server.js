@@ -13,7 +13,8 @@ const io = socketIo(server); // Initialize Socket.io with the server
 app.use(session({
   secret: 'your-secret-key', // Change this to a secure key
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to `true` if using HTTPS
 }));
 
 // Middleware to parse incoming requests (form data)
@@ -106,3 +107,4 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
