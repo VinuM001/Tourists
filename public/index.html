@@ -4,12 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Real-Time Tourist Movement</title>
+
     <!-- Link to Leaflet CSS for map styling -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
     <!-- Include Leaflet.js for map functionality -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <!-- Include Socket.io client library for real-time communication -->
+    <!-- This needs to be included before your custom script that uses `io()` -->
     <script src="/socket.io/socket.io.js"></script>  <!-- Include Socket.io only once -->
+
     <style>
       #map {
         width: 100%;
@@ -31,7 +36,7 @@
       }).addTo(map); // Add it to the map
 
       // Establish a connection to the backend server using Socket.io
-      const socket = io();
+      const socket = io(); // This connects to the server via Socket.io
 
       // Store tourist markers by their unique ID
       const touristMarkers = {};
@@ -67,4 +72,3 @@
     </script>
   </body>
 </html>
-
