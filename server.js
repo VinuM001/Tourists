@@ -108,3 +108,6 @@ server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
+const socketIo = require('socket.io');
+const server = http.createServer(app); // Create HTTP server using Express
+const io = socketIo(server); // Initialize Socket.io with the server
